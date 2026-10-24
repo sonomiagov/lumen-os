@@ -1,0 +1,23 @@
+#!/bin/bash
+# Final touches: branding, compiled dconf defaults, Flathub, caches.
+set -euxo pipefail
+
+# The dconf defaults and the shell extension are copied in before hooks run.
+[ -f /etc/dconf/db/local.d/00-lumen ] || { echo "ERROR: dconf defaults missing" >&2; exit 1; }
+[ -f /usr/share/gnome-shell/extensions/lumen-shell@lumen-os/extension.js ] || \
+    { echo "ERROR: lumen-shell extension missing" >&2; exit 1; }
+
+# Branding (ID stays "debian" so apt and third-party scripts keep working)
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Lumen OS 1.0"/; s/^NAME=.*/NAME="Lumen OS"/' /usr/lib/os-release
+
+# Compile system-wide defaults
+dconf update
+
+# Flathub for the Software app
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || \
+    echo "NOTE: could not add Flathub during build, the user can add it later"
+
+# Rebuild caches
+gtk-update-icon-cache -f -t /usr/share/icons/WhiteSur || true
+glib-compile-schemas /usr/share/glib-2.0/schemas || true
+fc-cache -f || true

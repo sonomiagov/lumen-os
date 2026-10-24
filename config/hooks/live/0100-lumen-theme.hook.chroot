@@ -1,0 +1,46 @@
+#!/bin/bash
+# Installs the WhiteSur GTK/GNOME Shell theme, icon theme and cursors system-wide.
+# Runs inside the image chroot during the build and needs internet access.
+set -euxo pipefail
+export DEBIAN_FRONTEND=noninteractive
+
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+cd "$WORK"
+
+clone() { git clone --depth 1 "https://github.com/vinceliuice/$1.git"; }
+
+# --- GTK + GNOME Shell theme (WhiteSur-Light and WhiteSur-Dark) -------------
+clone WhiteSur-gtk-theme
+(
+    cd WhiteSur-gtk-theme
+    ./install.sh -d /usr/share/themes -c Light -c Dark -N glassy -i simple \
+        || ./install.sh -d /usr/share/themes
+    # libadwaita (GTK4) apps read ~/.config/gtk-4.0, so seed it through /etc/skel
+    mkdir -p /etc/skel
+    HOME=/etc/skel ./install.sh -d /usr/share/themes -c Light -l || true
+)
+
+# --- Icons -------------------------------------------------------------------
+clone WhiteSur-icon-theme
+(
+    cd WhiteSur-icon-theme
+    ./install.sh -d /usr/share/icons -b
+)
+
+# --- Cursors -----------------------------------------------------------------
+clone WhiteSur-cursors
+(
+    cd WhiteSur-cursors
+    ./install.sh
+)
+
+# Fail the build loudly if the look did not install: the ISO would not be what was asked for.
+for d in /usr/share/themes/WhiteSur-Light /usr/share/themes/WhiteSur-Dark \
+         /usr/share/icons/WhiteSur /usr/share/icons/WhiteSur-cursors; do
+    [ -d "$d" ] || { echo "ERROR: $d is missing, theme install failed" >&2; exit 1; }
+done
+
+# --- Optional extras (a missing package only costs the blur effect) ----------
+apt-get install -y gnome-shell-extension-blur-my-shell || \
+    echo "NOTE: blur-my-shell not available in this release, skipping"

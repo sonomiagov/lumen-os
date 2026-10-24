@@ -1,0 +1,7 @@
+{
+  "uuid": "lumen-shell@lumen-os",
+  "name": "Lumen Shell",
+  "description": "macOS-style top bar for Lumen OS: system menu at the left, focused app name, clock on the right, no Activities button.",
+  "shell-version": ["46", "47", "48", "49"],
+  "version": 1
+}

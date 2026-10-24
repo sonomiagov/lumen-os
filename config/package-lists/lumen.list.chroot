@@ -1,0 +1,72 @@
+# Lumen OS package set (Debian 13 "trixie")
+
+# Base system and boot
+linux-image-amd64
+firmware-linux
+firmware-misc-nonfree
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+intel-microcode
+amd64-microcode
+network-manager
+sudo
+plymouth
+plymouth-themes
+pipewire-audio
+bluez
+cups
+printer-driver-all
+fwupd
+power-profiles-daemon
+
+# GNOME desktop (kept minimal, no task-gnome-desktop bloat)
+gdm3
+gnome-session
+gnome-shell
+gnome-shell-extensions
+gnome-shell-extension-dash-to-dock
+gnome-shell-extension-appindicator
+gnome-control-center
+gnome-tweaks
+gnome-keyring
+xdg-desktop-portal-gnome
+xdg-user-dirs-gtk
+gvfs-backends
+gvfs-fuse
+nautilus
+gnome-console
+gnome-text-editor
+gnome-calculator
+gnome-calendar
+gnome-clocks
+gnome-system-monitor
+gnome-disk-utility
+gnome-software
+gnome-software-plugin-flatpak
+gnome-characters
+file-roller
+loupe
+papers
+totem
+firefox-esr
+flatpak
+
+# Fonts (Inter stands in for San Francisco)
+fonts-inter
+fonts-noto-core
+fonts-noto-color-emoji
+fonts-firacode
+
+# Theme build requirements (used by the hooks, removed again by nothing: they are tiny)
+git
+sassc
+gettext
+libglib2.0-dev-bin
+dconf-cli
+libgtk-3-bin
+librsvg2-bin
+
+# Installer
+calamares
+calamares-settings-debian

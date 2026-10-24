@@ -1,0 +1,13 @@
+#panel {
+    height: 30px;
+    font-weight: 500;
+}
+
+.lumen-app-name {
+    font-weight: 700;
+    padding: 0 14px 0 6px;
+}
+
+.lumen-logo {
+    icon-size: 16px;
+}
